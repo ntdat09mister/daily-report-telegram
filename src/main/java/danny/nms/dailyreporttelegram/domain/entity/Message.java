@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "message")
@@ -17,4 +18,5 @@ public class Message {
     private Long id;
     private String message;
     private String sendTo;
+    private Date sendDate;
 }

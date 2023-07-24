@@ -7,15 +7,13 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "task")
+@Table(name = "id_chat")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Task {
+public class IdChat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String content;
-    private Boolean status;
-    private Long idChat;
+    private String chatId;
 }

@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Date;
 import java.util.Objects;
 
 @Service
@@ -27,6 +28,7 @@ public class MessageService {
             Message message = new Message();
             message.setMessage(messageInput.getContent());
             message.setSendTo(messageInput.getRecipientId());
+            message.setSendDate(new Date());
             messageRepository.save(message);
         }
     }
