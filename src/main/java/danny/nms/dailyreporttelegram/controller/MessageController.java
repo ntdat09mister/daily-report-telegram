@@ -10,17 +10,21 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("message")
+@RequestMapping("/message")
 public class MessageController {
     private final MessageService messageService;
     @Autowired
     private ScheduledReport scheduledReport;
-    @PostMapping("sendMessage")
+    @PostMapping("/sendMessage")
     public void sendMessage(@RequestBody MessageInput messageInput) {
         messageService.sendMessage(messageInput);
     }
-    @GetMapping("active")
+    @GetMapping("/active")
     public void activeMessage() throws NotFoundException {
         scheduledReport.scheduleReport();
+    }
+    @GetMapping("/getTime")
+    public String getTime() {
+        return scheduledReport.getTime();
     }
 }
