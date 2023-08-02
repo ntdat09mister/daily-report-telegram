@@ -2,6 +2,7 @@ package danny.nms.dailyreporttelegram.service;
 
 import danny.nms.dailyreporttelegram.domain.dto.MessageInput;
 import danny.nms.dailyreporttelegram.domain.entity.Message;
+import danny.nms.dailyreporttelegram.exception.MessageNotFoundException;
 import danny.nms.dailyreporttelegram.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +15,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -54,5 +56,15 @@ public class MessageService {
         }
         System.out.println(response.statusCode());
         System.out.println(response.body());
+    }
+
+    public Message findMessageById(Long id) {
+        Optional<Message> messageOptional = messageRepository.findById(id);
+        if (messageOptional.isPresent()) {
+            Message message = messageOptional.get();
+            return message;
+        } else {
+         throw new MessageNotFoundException("Not found message");
+        }
     }
 }

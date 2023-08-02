@@ -30,7 +30,7 @@ public class ScheduledReport {
     private final IdChatRepository idChatRepository;
     private final TaskRepository taskRepository;
 
-    @Scheduled(cron = "0 00 18 * * ?", zone = "${spring.jackson.time-zone}")
+    @Scheduled(cron = "0 30 17 * * ?", zone = "${spring.jackson.time-zone}")
     @Transactional(rollbackOn = Exception.class)
     public void scheduleReport() throws NotFoundException {
         String dayOfWeek = checkDateToSend();
