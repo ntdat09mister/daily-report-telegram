@@ -30,27 +30,20 @@ public class ScheduledReport {
     private final IdChatRepository idChatRepository;
     private final TaskRepository taskRepository;
 
-    @Scheduled(cron = "0 30 17 * * ?", zone = "${spring.jackson.time-zone}")
+    @Scheduled(cron = "0 35 17 * * ?", zone = "${spring.jackson.time-zone}")
     @Transactional(rollbackOn = Exception.class)
-    public void scheduleReport() throws NotFoundException {
+    public void scheduleReport() {
         String dayOfWeek = checkDateToSend();
         if (dayOfWeek.equalsIgnoreCase("Monday") || dayOfWeek.equalsIgnoreCase("Tuesday") ||
                 dayOfWeek.equalsIgnoreCase("Wednesday") || dayOfWeek.equalsIgnoreCase("Thursday") ||
-                dayOfWeek.equalsIgnoreCase("Saturday")) {
+                dayOfWeek.equalsIgnoreCase("Friday")) {
             List<Task> taskList = taskRepository.findAllWithCondition();
             for (Task task : taskList) {
                 if (!task.getStatus().booleanValue()) {
-                    String chatId = "";
+                    String chatId = "-1001932276096";
                     String contentTask = task.getContent();
                     String dayAndMonthToday = getDayAndMonth();
                     String contentTaskSend = String.format(contentTask, dayAndMonthToday);
-                    Optional<IdChat> optionalIdChat = idChatRepository.findById(task.getIdChat());
-                    if (optionalIdChat.isPresent()) {
-                        IdChat idChat = optionalIdChat.get();
-                        chatId = idChat.getChatId();
-                    } else {
-                        throw new NotFoundException("Not found any id chat!");
-                    }
                     MessageInput messageInput = new MessageInput(chatId, contentTaskSend);
                     messageService.sendMessage(messageInput);
                     Optional<Task> optionalTask = taskRepository.findById(task.getId());

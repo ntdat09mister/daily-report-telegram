@@ -5,15 +5,19 @@ import danny.nms.dailyreporttelegram.domain.entity.Message;
 import danny.nms.dailyreporttelegram.exception.MessageNotFoundException;
 import danny.nms.dailyreporttelegram.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -23,6 +27,8 @@ public class MessageService {
     @Value("${bot.token}")
     private String TOKEN;
     private final MessageRepository messageRepository;
+    @Autowired
+    private EntityManager entityManager;
     public void sendMessage(MessageInput messageInput) {
         String receiveId = messageInput.getRecipientId();
         if (Objects.nonNull(receiveId) && receiveId.trim().length() > 0) {
@@ -35,6 +41,7 @@ public class MessageService {
         }
     }
     public void sendSingleMessage(MessageInput messageInput) {
+
         send(messageInput);
     }
     public void send(MessageInput messageInput) {
@@ -66,5 +73,18 @@ public class MessageService {
         } else {
          throw new MessageNotFoundException("Not found message");
         }
+    }
+
+    public List<Message> messageList(Long id) {
+        StringBuilder queryBuilder = new StringBuilder();
+        queryBuilder.append("SELECT * from message e");
+        queryBuilder.append(" where e.id < :id");
+        String queryString = queryBuilder.toString();
+        System.out.println(queryString);
+        List<Message> result = entityManager
+                .createNativeQuery(queryString, Message.class)
+                .setParameter("id",id)
+                .getResultList();
+        return result;
     }
 }

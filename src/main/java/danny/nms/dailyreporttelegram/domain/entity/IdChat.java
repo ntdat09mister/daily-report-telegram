@@ -16,4 +16,7 @@ public class IdChat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String chatId;
+    // 1 is userChat, 0 us groupChat
+    private Boolean type;
+    private String name;
 }

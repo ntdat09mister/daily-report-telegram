@@ -12,19 +12,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/message")
 public class MessageController extends BaseController{
     private final MessageService messageService;
-    @Autowired
+    @Autowired 
     private ScheduledReport scheduledReport;
     @PostMapping("/sendMessage")
     public void sendMessage(@RequestBody MessageInput messageInput) {
         messageService.sendMessage(messageInput);
     }
     @GetMapping("/active")
-    public void activeMessage() throws NotFoundException {
+    public void activeMessage() {
         scheduledReport.scheduleReport();
     }
     @GetMapping("/{id}")
@@ -35,5 +37,9 @@ public class MessageController extends BaseController{
     @GetMapping("/getTime")
     public String getTime() {
         return scheduledReport.getTime();
+    }
+    @GetMapping("/all")
+    public List<Message> messageList(Long id) {
+        return messageService.messageList(id);
     }
 }
